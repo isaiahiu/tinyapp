@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/isaiahiu/tinyapp/issues"
   },
-  "homepage": "https://github.com/isaiahiu/tinyapp#readme"
+  "homepage": "https://github.com/isaiahiu/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
 }
