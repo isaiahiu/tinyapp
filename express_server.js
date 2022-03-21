@@ -5,6 +5,20 @@ const PORT = 3000; // default port 3000
 
 app.set("view engine", "ejs");
 
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
+
+function generateRandomString() {
+	let result = "";
+	while (result.length < 7) {
+		let char = Math.floor(Math.random() * (123 - 48) + 48);
+		if ((char >= 58 && char <= 64) || (char >= 91 && char <= 96)) {
+			continue;
+		}
+		result += String.fromCharCode(char);
+	}
+	return result;
+}
 const urlDatabase = {
 	b2xVn2: "http://www.lighthouselabs.ca",
 	"9sm5xK": "http://www.google.com",
@@ -13,6 +27,15 @@ const urlDatabase = {
 app.get("/urls", (req, res) => {
 	const templateVars = { urls: urlDatabase };
 	res.render("urls_index", templateVars);
+});
+
+app.get("/urls/new", (req, res) => {
+	res.render("urls_new");
+});
+
+app.post("/urls", (req, res) => {
+	console.log(req.body); // Log the POST request body to the console
+	res.send("Ok"); // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/urls/:shortURL", (req, res) => {
