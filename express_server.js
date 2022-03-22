@@ -57,6 +57,12 @@ app.get("/urls/:shortURL", (req, res) => {
 	res.render("urls_show", templateVars);
 });
 
+app.post("/urls/:shortURL", (req, res) => {
+	const id = req.params.shortURL;
+	urlDatabase[id] = req.body.newURL;
+	res.redirect(`/urls/${id}`);
+});
+
 app.get("/", (req, res) => {
 	res.send("Hello!");
 });
