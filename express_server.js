@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 function generateRandomString() {
 	let result = "";
-	while (result.length < 7) {
+	while (result.length < 6) {
 		let char = Math.floor(Math.random() * (123 - 48) + 48);
 		if ((char >= 58 && char <= 64) || (char >= 91 && char <= 96)) {
 			continue;
@@ -34,8 +34,14 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-	console.log(req.body); // Log the POST request body to the console
-	res.send("Ok"); // Respond with 'Ok' (we will replace this)
+	const short = generateRandomString();
+	urlDatabase[short] = req.body.longURL;
+	res.redirect(`/urls/${short}`);
+});
+
+app.get("/u/:shortURL", (req, res) => {
+	const longURL = urlDatabase[req.params.shortURL];
+	res.redirect(longURL);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
