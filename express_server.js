@@ -11,21 +11,18 @@ const res = require("express/lib/response");
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// function registerFunc(reqObj, usersObj) {
-// 	if (!req[body.email] || !req[body.password]) {
-// 		return res.status(400).send("Missing Fields");
-// 	}
-// 	const newId = generateRandomString();
-// 	const user = {
-// 		id: newId,
-// 		email: req.body.email,
-// 		password: req.body.password,
-// 	};
-// 	users[newId] = user;
-// 	res.cookie("user_id", newId);
-// 	console.log(users);
-// 	res.redirect("/urls");
-// }
+function userSearch(reqObj, usersObj) {
+	for (let user in usersObj) {
+		console.log(`user is: `, user);
+		console.log(`reqObj.email is: `, reqObj.email);
+		console.log(`user email is : `, usersObj[user].email);
+		console.log(``);
+		if (reqObj.email === usersObj[user].email) {
+			return true;
+		}
+		return false;
+	}
+}
 
 function generateRandomString() {
 	let result = "";
@@ -111,6 +108,9 @@ app.post("/register", (req, res) => {
 	if (!req.body.email || !req.body.password || req.body.password.length < 6) {
 		return res.status(400).send("Invalid Fields");
 	}
+	if (userSearch(req.body, users)) {
+		return res.status(400).send("Email already in use!");
+	}
 	const newId = generateRandomString();
 	const user = {
 		id: newId,
@@ -133,9 +133,9 @@ app.post("/login", (req, res) => {
 	const templateVars = {
 		user: users[req.cookies["user_id"]],
 	};
-	console.log("user key is: ", loginID);
-	console.log("users object is: ", users);
-	console.log("templateVars is : ", templateVars);
+	// console.log("user key is: ", loginID);
+	// console.log("users object is: ", users);
+	// console.log("templateVars is : ", templateVars);
 	res.redirect("/urls");
 });
 
@@ -156,5 +156,5 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.listen(PORT, () => {
-	console.log(`Example app listening on port ${PORT}!`);
+	console.log(`TinyApp listening on port ${PORT}!`);
 });
