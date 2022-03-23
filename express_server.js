@@ -5,7 +5,11 @@ const PORT = 3000; // default port 3000
 const req = require("express/lib/request");
 const res = require("express/lib/response");
 const bodyParser = require("body-parser");
-const { createUser, generateRandomString } = require("./data/helpers");
+const {
+	createUser,
+	generateRandomString,
+	authenticateUser,
+} = require("./data/helpers");
 const { users, urlDatabase } = require("./data/database");
 
 app.set("view engine", "ejs");
@@ -79,9 +83,11 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-	const templateVars = {
-		user: users[req.cookies["user_id"]],
-	};
+	const { error, data } = authenticateUser(req.body, users);
+	if (error) {
+		return res.status(403).send(error);
+	}
+	res.cookie("user_id", data);
 	res.redirect("/urls");
 });
 

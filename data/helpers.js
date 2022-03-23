@@ -28,4 +28,18 @@ function generateRandomString() {
 	return result;
 }
 
-module.exports = { createUser, generateRandomString };
+function authenticateUser(reqObj, usersObj) {
+	const { email, password } = reqObj;
+
+	for (const user in usersObj) {
+		if (usersObj[user]["email"] === email) {
+			if (usersObj[user].password !== password) {
+				return { error: "Password not match", data: null };
+			}
+			return { error: null, data: usersObj[user].id };
+		}
+	}
+	return { error: "User not found", data: null };
+}
+
+module.exports = { createUser, generateRandomString, authenticateUser };
