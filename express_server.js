@@ -7,8 +7,25 @@ const PORT = 3000; // default port 3000
 app.set("view engine", "ejs");
 
 const bodyParser = require("body-parser");
+const res = require("express/lib/response");
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// function registerFunc(reqObj, usersObj) {
+// 	if (!req[body.email] || !req[body.password]) {
+// 		return res.status(400).send("Missing Fields");
+// 	}
+// 	const newId = generateRandomString();
+// 	const user = {
+// 		id: newId,
+// 		email: req.body.email,
+// 		password: req.body.password,
+// 	};
+// 	users[newId] = user;
+// 	res.cookie("user_id", newId);
+// 	console.log(users);
+// 	res.redirect("/urls");
+// }
 
 function generateRandomString() {
 	let result = "";
@@ -25,16 +42,43 @@ const urlDatabase = {
 	b2xVn2: "http://www.lighthouselabs.ca",
 	"9sm5xK": "http://www.google.com",
 };
-
+const users = {
+	userRandomID: {
+		id: "userRandomID",
+		email: "user@example.com",
+		password: "purple-monkey-dinosaur",
+	},
+	user2RandomID: {
+		id: "user2RandomID",
+		email: "user2@example.com",
+		password: "dishwasher-funk",
+	},
+};
 app.get("/", (req, res) => {
 	res.send("Hello!");
 });
 
+app.get("/hello", (req, res) => {
+	res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
+
+app.get("/register", (req, res) => {
+	res.render("register");
+});
+
+app.get("/login", (req, res) => {
+	res.render("login");
+});
+
 app.get("/urls", (req, res) => {
+	const loginID = req.cookies["user_id"];
 	const templateVars = {
-		username: req.cookies["username"],
+		user: users[loginID],
 		urls: urlDatabase,
 	};
+	// console.log("user key is: ", loginID);
+	// console.log("users object is: ", users);
+	// console.log("templateVars is : ", templateVars);
 	res.render("urls_index", templateVars);
 });
 
@@ -42,20 +86,16 @@ app.get("/urls.json", (req, res) => {
 	res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-	res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 app.get("/urls/new", (req, res) => {
 	const templateVars = {
-		username: req.cookies["username"],
+		user: users[req.cookies["user_id"]],
 	};
 	res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
 	const templateVars = {
-		username: req.cookies["username"],
+		user: users[req.cookies["user_id"]],
 		shortURL: req.params.shortURL,
 		longURL: urlDatabase[req.params.shortURL],
 	};
@@ -67,6 +107,22 @@ app.get("/u/:shortURL", (req, res) => {
 	res.redirect(longURL);
 });
 
+app.post("/register", (req, res) => {
+	if (!req.body.email || !req.body.password || req.body.password.length < 6) {
+		return res.status(400).send("Invalid Fields");
+	}
+	const newId = generateRandomString();
+	const user = {
+		id: newId,
+		email: req.body.email,
+		password: req.body.password,
+	};
+	users[newId] = user;
+	res.cookie("user_id", newId);
+	console.log(users);
+	res.redirect("/urls");
+});
+
 app.post("/urls", (req, res) => {
 	const short = generateRandomString();
 	urlDatabase[short] = req.body.longURL;
@@ -74,13 +130,17 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-	const cookie = req.body.username;
-	res.cookie("username", cookie);
+	const templateVars = {
+		user: users[req.cookies["user_id"]],
+	};
+	console.log("user key is: ", loginID);
+	console.log("users object is: ", users);
+	console.log("templateVars is : ", templateVars);
 	res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
-	res.clearCookie("username");
+	res.clearCookie("user_id");
 	res.redirect("/urls");
 });
 

@@ -15,26 +15,56 @@
 			crossorigin="anonymous"
 		/>
 
-		<title>New URL - TinyApp Example</title>
+		<title>Log In</title>
 	</head>
 
 	<body>
-		<%- include('partials/_header') %>
-
+    <header>
+	<nav class="navbar navbar-expand-md navbar-dark bg-success">
+		<a class="navbar-brand" href="/urls"> TinyApp </a>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-toggle="collapse"
+			data-target="#navbarNavAltMarkup"
+			aria-controls="navbarNavAltMarkup"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="/urls"> My URLs </a>
+				<a class="nav-item nav-link" href="/urls/new"> Create New URL </a>
+			</form>
+		</div>
+	</div>
+	</nav>
+</header>
 		<main style="margin: 1em">
-			<h3>Create TinyURL</h3>
-			<form class="form-inline" action="/urls" method="POST">
-				<div class="form-group mb-2">
-					<label for="longURL">Enter a URL:</label>
+			<h3>Login</h3>
+			<form method="POST" action="/login">
+				<div class="form-group">
+					<label>Email</label>
 					<input
+						type="email"
 						class="form-control"
-						type="text"
-						name="longURL"
-						placeholder="http://"
-						style="width: 300px; margin: 1px"
+						name="email"
+						aria-describedby="emailHelp"
+						placeholder="Ex. Apples123"
 					/>
-					<button type="submit" class="btn btn-primary">Submit</button>
 				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input
+						type="password"
+						class="form-control"
+						name="password"
+						placeholder="Password"
+					/>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</form>
 		</main>
 		<!-- Bootstrap JS -->
