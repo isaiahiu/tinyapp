@@ -24,6 +24,15 @@ app.use(
 	})
 );
 
+// ROUTING HANDLERS BELOW //
+
+app.get("/", (req, res) => {
+	if (!req.session.user_id) {
+		return res.redirect("/login");
+	}
+	res.redirect("/urls");
+});
+
 app.get("/register", (req, res) => {
 	res.render("register");
 });

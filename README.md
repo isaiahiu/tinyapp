@@ -12,9 +12,9 @@
 
 - `GET /`
   - If user is logged in:
-    - [ ] (Minor) redirect to `/urls`
+    - [x] (Minor) redirect to `/urls`
   - If user is not logged in:
-    - [ ] (Minor) redirect to `/login`
+    - [x] (Minor) redirect to `/login`
 - `GET /urls`
   - If user is logged in:
     - returns HTML with:
