@@ -58,7 +58,10 @@ app.post("/urls", (req, res) => {
 		return res.redirect(401, "/login");
 	}
 	const short = generateRandomString();
-	urlDatabase[short] = req.body.longURL;
+	urlDatabase[short] = {
+		longURL: req.body.longURL,
+		userID: req.cookies["user_id"],
+	};
 	res.redirect(`/urls/${short}`);
 });
 
@@ -80,14 +83,14 @@ app.get("/urls/:shortURL", (req, res) => {
 	const templateVars = {
 		user: users[req.cookies["user_id"]],
 		shortURL: req.params.shortURL,
-		longURL: urlDatabase[req.params.shortURL],
+		longURL: urlDatabase[req.params.shortURL].longURL,
 	};
 	res.render("urls_show", templateVars);
 });
 
 app.post("/urls/:shortURL", (req, res) => {
 	const id = req.params.shortURL;
-	urlDatabase[id] = req.body.newURL;
+	urlDatabase[id].longURL = req.body.newURL;
 	res.redirect(`/urls/${id}`);
 });
 
@@ -97,7 +100,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-	const longURL = urlDatabase[req.params.shortURL];
+	if (!urlDatabase[req.params.shortURL]) {
+		return res.redirect(404, "/urls");
+	}
+	const longURL = urlDatabase[req.params.shortURL].longURL;
 	res.redirect(longURL);
 });
 
