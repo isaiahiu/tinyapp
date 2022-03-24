@@ -100,6 +100,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+	if (!urlDatabase[req.params.shortURL]) {
+		return res.status(404).send("Short Url hasn't been created (yet)");
+	}
 	if (!req.session.user_id) {
 		return res.status(401).send("Please log in!");
 	}
@@ -115,6 +118,9 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
+	if (!urlDatabase[req.params.shortURL]) {
+		return res.status(404).send("Short Url hasn't been created (yet)");
+	}
 	if (!req.session.user_id) {
 		return res.status(401).send("Please log in!");
 	}

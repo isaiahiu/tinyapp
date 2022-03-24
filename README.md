@@ -51,7 +51,7 @@
     - [ ] (Stretch) the number of times the short URL was visited
     - [ ] (Stretch) the number of unique visits for the short URL
   - if a URL for the given ID does not exist
-    - [ ] (Minor) returns HTML with a relevant error message
+    - [x] (Minor) returns HTML with a relevant error message
   - if user is not logged in:
     - [x] returns HTML with a relevant error message
   - if user is logged in but does not own the URL with the given ID:
