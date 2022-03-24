@@ -53,6 +53,11 @@
 					<% } %>
 				</tbody>
 			</table>
+			<% if(!user){ %>
+			<blockquote class="blockquote">
+				<p>Please log in or register first.</p>
+			</blockquote>
+			<% } %>
 		</main>
 		<!-- Bootstrap JS -->
 		<script

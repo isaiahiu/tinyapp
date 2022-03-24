@@ -5,6 +5,7 @@ const {
 	createUser,
 	generateRandomString,
 	authenticateUser,
+	urlsForUser,
 } = require("./data/helpers");
 const { users, urlDatabase } = require("./data/database");
 
@@ -45,10 +46,9 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-	const loginID = req.cookies["user_id"];
 	const templateVars = {
-		user: users[loginID],
-		urls: urlDatabase,
+		user: users[req.cookies["user_id"]],
+		urls: urlsForUser(req.cookies["user_id"], urlDatabase),
 	};
 	res.render("urls_index", templateVars);
 });
@@ -80,6 +80,12 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+	if (!req.cookies["user_id"]) {
+		return res.status(401).send("Please log in!");
+	}
+	if (req.cookies["user_id"] !== urlDatabase[req.params.shortURL].userID) {
+		return res.send("URL does not belong to you!");
+	}
 	const templateVars = {
 		user: users[req.cookies["user_id"]],
 		shortURL: req.params.shortURL,
@@ -89,12 +95,24 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
+	if (!req.cookies["user_id"]) {
+		return res.status(401).send("Please log in!");
+	}
+	if (req.cookies["user_id"] !== urlDatabase[req.params.shortURL].userID) {
+		return res.send("URL does not belong to you!");
+	}
 	const id = req.params.shortURL;
 	urlDatabase[id].longURL = req.body.newURL;
 	res.redirect(`/urls/${id}`);
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+	if (!req.cookies["user_id"]) {
+		return res.status(401).send("Please log in!");
+	}
+	if (req.cookies["user_id"] !== urlDatabase[req.params.shortURL].userID) {
+		return res.send("URL does not belong to you!");
+	}
 	delete urlDatabase[req.params.shortURL];
 	res.redirect("/urls");
 });

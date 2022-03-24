@@ -42,4 +42,19 @@ function authenticateUser(reqObj, usersObj) {
 	return { error: "User not found", data: null };
 }
 
-module.exports = { createUser, generateRandomString, authenticateUser };
+function urlsForUser(id, urlDB) {
+	let result = {};
+	for (let url in urlDB) {
+		if (id === urlDB[url].userID) {
+			result[url] = urlDB[url];
+		}
+	}
+	return result;
+}
+
+module.exports = {
+	createUser,
+	generateRandomString,
+	authenticateUser,
+	urlsForUser,
+};
