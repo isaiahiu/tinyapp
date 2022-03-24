@@ -8,7 +8,7 @@ const {
 } = require("./data/helpers");
 const { users, urlDatabase } = require("./data/database");
 
-const PORT = 3000; 
+const PORT = 3000;
 
 const app = express();
 
@@ -64,6 +64,9 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+	if (!req.cookies["user_id"]) {
+		return res.redirect("/login");
+	}
 	const templateVars = {
 		user: users[req.cookies["user_id"]],
 	};
@@ -99,7 +102,6 @@ app.post("/logout", (req, res) => {
 	res.clearCookie("user_id");
 	res.redirect("/urls");
 });
-
 
 app.listen(PORT, () => {
 	console.log(`TinyApp listening on port ${PORT}!`);
