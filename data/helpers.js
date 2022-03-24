@@ -1,9 +1,9 @@
-function createUser(email, password, usersObj) {
+function createUser(email, password, database) {
 	if (!email || !password || password.length < 6) {
 		return { error: "Invalid Fields", data: null };
 	}
-	for (const user in usersObj) {
-		if (usersObj[user].email === email) {
+	for (const user in database) {
+		if (database[user].email === email) {
 			return { error: "Email already in use!", data: null };
 		}
 	}
@@ -12,7 +12,7 @@ function createUser(email, password, usersObj) {
 		email,
 		password,
 	};
-	usersObj[user.id] = user;
+	database[user.id] = user;
 	return { error: null, data: user };
 }
 
@@ -28,15 +28,15 @@ function generateRandomString() {
 	return result;
 }
 
-function authenticateUser(reqObj, usersObj) {
-	const { email, password } = reqObj;
+function authenticateUser(userLogin, database) {
+	const { email, password } = userLogin;
 
-	for (const user in usersObj) {
-		if (usersObj[user]["email"] === email) {
-			if (usersObj[user].password !== password) {
+	for (const user in database) {
+		if (database[user]["email"] === email) {
+			if (database[user].password !== password) {
 				return { error: "Password not match", data: null };
 			}
-			return { error: null, data: usersObj[user].id };
+			return { error: null, data: database[user].id };
 		}
 	}
 	return { error: "User not found", data: null };
