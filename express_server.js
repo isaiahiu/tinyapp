@@ -41,6 +41,9 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+	if (!req.body.email || !req.body.password || req.body.password.length < 6) {
+		return res.send("Invalid Fields");
+	}
 	const salt = bcrypt.genSaltSync(10);
 	const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 	const { error, data } = createUser(req.body.email, hashedPassword, users);

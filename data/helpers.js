@@ -1,7 +1,4 @@
 function createUser(email, password, database) {
-	if (!email || !password || password.length < 6) {
-		return { error: "Invalid Fields", data: null };
-	}
 	for (const user in database) {
 		if (database[user].email === email) {
 			return { error: "Email already in use!", data: null };
