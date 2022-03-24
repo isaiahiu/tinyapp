@@ -72,6 +72,10 @@ app.get("/urls.json", (req, res) => {
 	res.json(urlDatabase);
 });
 
+app.get("/users.json", (req, res) => {
+	res.json(users);
+});
+
 app.get("/urls/new", (req, res) => {
 	if (!req.cookies["user_id"]) {
 		return res.redirect(401, "/login");
