@@ -28,12 +28,12 @@ function generateRandomString() {
 	return result;
 }
 
-function authenticateUser(userLogin, database) {
+function authenticateUser(userLogin, database, cb) {
 	const { email, password } = userLogin;
 
 	for (const user in database) {
 		if (database[user]["email"] === email) {
-			if (database[user].password !== password) {
+			if (!cb(password, database[user]["password"])) {
 				return { error: "Password not match", data: null };
 			}
 			return { error: null, data: database[user].id };

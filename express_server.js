@@ -25,7 +25,9 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
 	const { email, password } = req.body;
-	const { error, data } = createUser(email, password, users);
+	const salt = bcrypt.genSaltSync(10);
+	const hashedPassword = bcrypt.hashSync(password, salt);
+	const { error, data } = createUser(email, hashedPassword, users);
 	if (error) {
 		return res.status(400).send(error);
 	}
@@ -38,7 +40,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-	const { error, data } = authenticateUser(req.body, users);
+	const { error, data } = authenticateUser(req.body, users, bcrypt.compareSync);
 	if (error) {
 		return res.status(403).send(error);
 	}
