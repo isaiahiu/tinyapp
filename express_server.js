@@ -63,7 +63,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-	// checks if user email exists and if password matches, using callbk function
+	// checks if user email exists and if password matches, using callbk function that checks hash match
 	const { error, data } = authenticateUser(req.body, users, bcrypt.compareSync);
 	if (error) {
 		return res.status(403).send(error);
@@ -84,7 +84,7 @@ app.get("/urls", (req, res) => {
 // Endpoints below mostly require a user to be logged in + matching data //
 
 app.post("/urls", (req, res) => {
-	// If not logged in, users cannot creating new links, redirect to login page
+	// If not logged in, users cannot create new links, redirect to login page
 	if (!req.session.user_id) {
 		return res.redirect(401, "/login");
 	}

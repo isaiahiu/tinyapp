@@ -32,8 +32,8 @@ function authenticateUser(userLogin, database, cb) {
 	const { email, password } = userLogin;
 	for (const user in database) {
 		// look for a matching email
-		if (database[user]["email"] === email) {
-			// once found, use a compare callback to verify hash password. If false return error msg.
+		if (database[user].email === email) {
+			// once found, use a compare callback. If false return error msg, else return user obj
 			if (!cb(password, database[user].password)) {
 				return { error: "Password not match", data: null };
 			}

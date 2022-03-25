@@ -22,10 +22,14 @@ Created by isaiahiu for educational purposes only.
 
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node express_server.js` command.
+- Navigate to `localhost:3000` in a browser where users will be prompted to log in.
+- Register link will be available in the top right corner of header of users without an account.
+- Users must be logged in to be able to create new URLs, edit, or delete their own URLs.
+- Without an account, user can still use short links.
 
-## Project Requirements
+## Project Features
 
-#### Display Requirements
+#### Display
 
 - Site Header
   - If a user is logged in, the header shows:
@@ -35,7 +39,7 @@ Created by isaiahiu for educational purposes only.
     - [x] a link to the login page (`/login`)
     - [x] a link to the registration page (`/register`)
 
-#### Behaviour Requirements
+#### Behavioural
 
 - `GET /`
   - If user is logged in:
