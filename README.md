@@ -22,6 +22,8 @@ Created by isaiahiu for educational purposes only.
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node express_server.js` command.
 
+## Project Requirements
+
 ### Display Requirements
 
 - Site Header
