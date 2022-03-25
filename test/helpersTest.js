@@ -5,7 +5,7 @@ const {
 	generateRandomString,
 	authenticateUser,
 	urlsForUser,
-} = require("..helpers");
+} = require("../data/helpers");
 
 const testUsers = {
 	userRandomID: {
@@ -20,14 +20,38 @@ const testUsers = {
 	},
 };
 
-describe("getUserByEmail", function () {
-	it("should return a user with valid email", function () {
-		const user = getUserByEmail("user@example.com", testUsers);
-		const expectedUserID = "userRandomID";
-		// Write your assert statement here
+describe("createUser", () => {
+	it("should return a new user object and add user to database", () => {
+		const email = "123@test.com";
+		const password = "123456";
+		const user = createUser(email, password, testUsers);
+		assert.equal(user.data, testUsers[user.data.id]);
+	});
+	it("should return with an error string if email already in use", () => {
+		const email = "user@example.com";
+		const password = "123456";
+		const user = createUser(email, password, testUsers);
+		assert.isString(user.error);
 	});
 });
 
-describe("createUser", function () {
-	it("should create a new user", function () {});
+describe("generateRandomString", () => {
+	it("should create alphanumeric string six characters long", () => {
+		const str = generateRandomString();
+		assert.isString(str);
+		assert.isTrue(str.length === 6);
+	});
+});
+
+describe("authenticateUser", () => {
+	it("should return an object with error: null and data as a user object from a database if email and password match ", () => {
+		const loginObj = {
+			email: "user2@example.com",
+			password: "dishwasher-funk",
+		};
+		const user = authenticateUser(loginObj, testUsers, (x, y) => {
+			return x === y ? true : false;
+		});
+		assert.deepEqual(user.data, testUsers.user2RandomID);
+	});
 });

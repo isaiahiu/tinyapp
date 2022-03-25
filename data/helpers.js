@@ -28,14 +28,16 @@ function generateRandomString() {
 }
 
 function authenticateUser(userLogin, database, cb) {
-	//returns appropriate error messages and user data
+	//returns appropriate error messages and user object data by checking cases
 	const { email, password } = userLogin;
 	for (const user in database) {
+		// look for a matching email
 		if (database[user]["email"] === email) {
-			if (!cb(password, database[user]["password"])) {
+			// once found, use a compare callback to verify hash password. If false return error msg.
+			if (!cb(password, database[user].password)) {
 				return { error: "Password not match", data: null };
 			}
-			return { error: null, data: database[user].id };
+			return { error: null, data: database[user] };
 		}
 	}
 	return { error: "User not found", data: null };
