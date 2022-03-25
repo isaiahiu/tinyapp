@@ -18,6 +18,7 @@
 				<a class="nav-item nav-link" href="/urls/new"> Create New URL </a>
 			</div>
 		</div>
+		<!-- Displays user name if logged in, other wise displays login and register links -->
 		<% if(user){ %>
 		<div class="navbar-nav">
 			<span class="navbar-text"> Logged in as: <%= user.email %> </span>

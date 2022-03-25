@@ -1,4 +1,4 @@
-// All the requires below //
+// Imports below //
 const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
@@ -41,8 +41,8 @@ app.get("/register", (req, res) => {
 	res.render("register");
 });
 
-// Verifies for valid user inputs fields before hashing password and creating new user
 app.post("/register", (req, res) => {
+	// Verifies for valid user inputs fields before hashing password and creating new user
 	if (!req.body.email || !req.body.password || req.body.password.length < 6) {
 		return res.send("Invalid Fields");
 	}
@@ -54,7 +54,7 @@ app.post("/register", (req, res) => {
 		// in the case email already in use
 		return res.status(400).send(error);
 	}
-	req.session.user_id = data.id;
+	req.session.user_id = data.id; //assign session cookie to user's id
 	res.redirect("/urls");
 });
 
@@ -63,11 +63,12 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+	// checks if user email exists and if password matches, using callbk function
 	const { error, data } = authenticateUser(req.body, users, bcrypt.compareSync);
 	if (error) {
 		return res.status(403).send(error);
 	}
-	req.session.user_id = data;
+	req.session.user_id = data.id; // assign session cookie to user's id
 	res.redirect("/urls");
 });
 
@@ -80,25 +81,20 @@ app.get("/urls", (req, res) => {
 	res.render("urls_index", templateVars);
 });
 
+// Endpoints below mostly require a user to be logged in + matching data //
+
 app.post("/urls", (req, res) => {
 	// If not logged in, users cannot creating new links, redirect to login page
 	if (!req.session.user_id) {
 		return res.redirect(401, "/login");
 	}
-	const short = generateRandomString(); 
-	urlDatabase[short] = { // creates new short Url object and adds to existing urlDatabase
+	const short = generateRandomString();
+	urlDatabase[short] = {
+		// creates new short Url object and adds to existing urlDatabase
 		longURL: req.body.longURL,
 		userID: req.session.user_id,
 	};
 	res.redirect(`/urls/${short}`);
-});
-
-app.get("/urls.json", (req, res) => { 
-	res.json(urlDatabase);
-});
-
-app.get("/users.json", (req, res) => {
-	res.json(users);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -112,6 +108,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+	// security checks below
 	if (!urlDatabase[req.params.shortURL]) {
 		return res.status(404).send("Short Url hasn't been created (yet)");
 	}
@@ -122,6 +119,7 @@ app.get("/urls/:shortURL", (req, res) => {
 		return res.send("URL does not belong to you!");
 	}
 	const templateVars = {
+		// creates an object for "urls_show" to display proper long and short urls, and proper header
 		user: users[req.session.user_id],
 		shortURL: req.params.shortURL,
 		longURL: urlDatabase[req.params.shortURL].longURL,
@@ -130,6 +128,7 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
+	// security checks
 	if (!urlDatabase[req.params.shortURL]) {
 		return res.status(404).send("Short Url hasn't been created (yet)");
 	}
@@ -139,6 +138,7 @@ app.post("/urls/:shortURL", (req, res) => {
 	if (req.session.user_id !== urlDatabase[req.params.shortURL].userID) {
 		return res.send("URL does not belong to you!");
 	}
+	// updates a new long Url for existing short Url in urlDatabase
 	const id = req.params.shortURL;
 	urlDatabase[id].longURL = req.body.newURL;
 	res.redirect("/urls");
