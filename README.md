@@ -7,6 +7,7 @@ Created by isaiahiu for educational purposes only.
 
 !["Screenshot of Homepage"](https://github.com/isaiahiu/tinyapp/blob/master/docs/urls-page.png?raw=true)
 !["Screenshot of Registration page"](https://github.com/isaiahiu/tinyapp/blob/master/docs/register-page.png?raw=true)
+!["Screenshot of Short Url page"](https://github.com/isaiahiu/tinyapp/blob/master/docs/shorturl-page.png?raw=true)
 
 ## Dependencies
 
