@@ -22,7 +22,7 @@ Created by isaiahiu for educational purposes only.
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node express_server.js` command.
 
-# Display Requirements
+### Display Requirements
 
 - Site Header
   - If a user is logged in, the header shows:
@@ -32,7 +32,7 @@ Created by isaiahiu for educational purposes only.
     - [x] a link to the login page (`/login`)
     - [x] a link to the registration page (`/register`)
 
-### Behaviour Requirements
+##### Behaviour Requirements
 
 - `GET /`
   - If user is logged in:
