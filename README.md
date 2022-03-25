@@ -24,7 +24,7 @@ Created by isaiahiu for educational purposes only.
 
 ## Project Requirements
 
-### Display Requirements
+#### Display Requirements
 
 - Site Header
   - If a user is logged in, the header shows:
@@ -34,7 +34,7 @@ Created by isaiahiu for educational purposes only.
     - [x] a link to the login page (`/login`)
     - [x] a link to the registration page (`/register`)
 
-##### Behaviour Requirements
+#### Behaviour Requirements
 
 - `GET /`
   - If user is logged in:
