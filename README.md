@@ -105,7 +105,7 @@
     - [x] returns HTML with a relevant error message
 - `POST /register`
   - if email or password are empty:
-    - [ ] returns HTML with a relevant error message
+    - [x] returns HTML with a relevant error message
   - if email already exists:
     - [x] returns HTML with a relevant error message
   - otherwise:

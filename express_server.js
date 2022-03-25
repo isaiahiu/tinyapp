@@ -1,3 +1,4 @@
+// All the requires below //
 const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
@@ -10,7 +11,7 @@ const {
 } = require("./data/helpers");
 const { users, urlDatabase } = require("./data/database");
 
-const PORT = 3000;
+const PORT = 3000; // default port
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.use(
 	})
 );
 
-// ROUTING HANDLERS BELOW //
+// Routing Handlers and Endpoints below //
 
 app.get("/", (req, res) => {
 	if (!req.session.user_id) {
@@ -40,6 +41,7 @@ app.get("/register", (req, res) => {
 	res.render("register");
 });
 
+// Verifies for valid user inputs fields before hashing password and creating new user
 app.post("/register", (req, res) => {
 	if (!req.body.email || !req.body.password || req.body.password.length < 6) {
 		return res.send("Invalid Fields");
@@ -47,7 +49,9 @@ app.post("/register", (req, res) => {
 	const salt = bcrypt.genSaltSync(10);
 	const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 	const { error, data } = createUser(req.body.email, hashedPassword, users);
+
 	if (error) {
+		// in the case email already in use
 		return res.status(400).send(error);
 	}
 	req.session.user_id = data.id;
@@ -68,26 +72,28 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+	// Creates a generated list of URLs that belong to user into an object to render into "urls_index"
 	const templateVars = {
 		user: users[req.session.user_id],
-		urls: urlsForUser(req.session.user_id, urlDatabase),
+		urls: urlsForUser(req.session.user_id, urlDatabase), // Helper function here to create url list as objects
 	};
 	res.render("urls_index", templateVars);
 });
 
 app.post("/urls", (req, res) => {
+	// If not logged in, users cannot creating new links, redirect to login page
 	if (!req.session.user_id) {
 		return res.redirect(401, "/login");
 	}
-	const short = generateRandomString();
-	urlDatabase[short] = {
+	const short = generateRandomString(); 
+	urlDatabase[short] = { // creates new short Url object and adds to existing urlDatabase
 		longURL: req.body.longURL,
 		userID: req.session.user_id,
 	};
 	res.redirect(`/urls/${short}`);
 });
 
-app.get("/urls.json", (req, res) => {
+app.get("/urls.json", (req, res) => { 
 	res.json(urlDatabase);
 });
 
