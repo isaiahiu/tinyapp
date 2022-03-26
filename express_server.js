@@ -8,7 +8,7 @@ const {
 	generateRandomString,
 	authenticateUser,
 	urlsForUser,
-} = require("./data/helpers");
+} = require("./helpers/helpers");
 const { users, urlDatabase } = require("./data/database");
 
 const PORT = 3000; // default port
@@ -99,7 +99,7 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
 	if (!req.session.user_id) {
-		return res.redirect(401, "/login");
+		return res.redirect("/login");
 	}
 	const templateVars = {
 		user: users[req.session.user_id],
